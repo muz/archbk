@@ -31,6 +31,8 @@ install_arch () {
       exit 1
     fi
 
+    echo "Go run wifi-menu and get the network running first. ^C here if need be."
+
     pass_ver root
 
     echo
@@ -55,7 +57,8 @@ install_arch () {
         netctl enable network && netctl start network 
       else
         echo
-        wifi-menu -o
+        # Assume wifi-menu and netctl are working already because of flaky device support
+        # wifi-menu -o
       fi
 
       root_dev="$(lsblk 2> /dev/null | grep "[/]$" | sed "s/[0-9a-z]*//" | sed "s/[^0-9a-z]*[ ].*//" | sed "s/[^0-9a-z]*//g" | sed "s/[p].*//")"
@@ -504,7 +507,9 @@ essentials () {
   # determin the ALARM codename, based on chromeOS firmeare parse
   if [ ! $tarball ]; then
     confirm_internet_connection
-    chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
+    # chr_codename="$(/usr/sbin/chromeos-firmwareupdate -V 2> /dev/null | head -n2 | tail -n1 | sed 's/^.*d\///' | sed 's/\/u.*$//')"
+    # Hardcode the Oak codename for the S330 because ¯\_(ツ)_/¯
+    chr_codename="oak"
 
     # map chromebook model to Arch Linux ARM codename to determine Arch Linux ARM tarball to use
     if [ ! $chr_codename ]; then
